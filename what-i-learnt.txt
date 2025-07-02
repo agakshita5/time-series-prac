@@ -16,5 +16,20 @@ df['closed_lag1']= df['close'].shift(1) -> lagged values
 
 SEASONAL DECOMPOSITION
 - trends: general direction of the time series
-- seasonality: seasonal cycles
+- seasonality: seasonal cycles -> 2 types: 
+    - additive: have constant seasonal fluctuations or seasonal cycles are constant in value
+    - multiplicative: seasonal cycles are proportional to the trend (in %age)
 - error term: what is not explained by trends and seasonality
+
+from statsmodels.graphics.tsaplots import month_plot, quarter_plot
+month_plot(df['close'].resample('M').mean(), ylabel='closing') # or 'Q'
+
+from statsmodels.tsa.seasonal import seasonal_decompose
+decomp2 = seasonal_decompose(df['close'], model='add', period = 24) # or 'mul'
+fig = decomp2.plot()
+fig.set_size_inches(10,8)
+plt.show()
+
+AUTOCORRELATION
+- tells if there is info in past that could help in predict future
+- correlates time series features with lagged values
