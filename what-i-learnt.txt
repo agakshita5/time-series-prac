@@ -1,26 +1,26 @@
-df['Date']= pd.to_datetime(df['Timestamp'], unit='s')
+🔺 datetime object -> df['Date']= pd.to_datetime(df['Timestamp'], unit='s')
 
-df = df[~df['Date'].dt.year.isin([2012, 2013, 2014])]
-# or df = df[(df['year'] >= 2015) & (df['year'] <= 2025)]
+🔺 df = df[~df['Date'].dt.year.isin([2012, 2013, 2014])] # or df = df[(df['year'] >= 2015) & (df['year'] <= 2025)]
 
-df.columns = df.columns.str.lower() -> to lower case
+🔺 cols to lower case -> df.columns = df.columns.str.lower() 
 
-df.resample('M').mean() # or Y, W -> resampling
-df.resample('M').mean()['close'].idxmax() -> find out the highest average month
+🔺 resampling -> df.resample('M').mean() # or Y, W 
+find out the highest average month -> df.resample('M').mean()['close'].idxmax() 
 
-df['7_day_rolling'] = df['close'].rolling(window = 1000).mean() -> rolling window calculations
+🔺 rolling window calculations -> df['7_day_rolling'] = df['close'].rolling(window = 1000).mean() 
 
 df['close'].pct_change() * 100
 
-df['closed_lag1']= df['close'].shift(1) -> lagged values
+🔺 lagged values -> df['closed_lag1']= df['close'].shift(1)
 
-SEASONAL DECOMPOSITION
+🔺 SEASONAL DECOMPOSITION
 - trends: general direction of the time series
 - seasonality: seasonal cycles -> 2 types: 
     - additive: have constant seasonal fluctuations or seasonal cycles are constant in value
     - multiplicative: seasonal cycles are proportional to the trend (in %age)
 - error term: what is not explained by trends and seasonality
 
+🔺 STATSMODEL -> TO SHOW SEASONALITY CURVE
 from statsmodels.graphics.tsaplots import month_plot, quarter_plot
 month_plot(df['close'].resample('M').mean(), ylabel='closing') # or 'Q'
 
@@ -30,6 +30,6 @@ fig = decomp2.plot()
 fig.set_size_inches(10,8)
 plt.show()
 
-AUTOCORRELATION
+🔺 AUTOCORRELATION
 - tells if there is info in past that could help in predict future
 - correlates time series features with lagged values
