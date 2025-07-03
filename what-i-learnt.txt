@@ -33,3 +33,42 @@ plt.show()
 🔺 AUTOCORRELATION
 - tells if there is info in past that could help in predict future
 - correlates time series features with lagged values
+
+🔺 TREND
+from statsmodels.tsa.deterministic import DeterministicProcess
+dp = DeterministicProcess(
+    index=tunnel.index,  # dates from the training data
+    constant=True,       # dummy feature for the bias (y_intercept)
+    order=1,             # the time dummy (trend)
+    drop=True,           # drop terms if necessary to avoid collinearity
+)
+# `in_sample` creates features for the dates given in the `index` argument
+X = dp.in_sample()
+
+🔺 FORECAST 
+To make a forecast, we apply our model to "out of sample" features. 
+"Out of sample" refers to times outside of the observation period of the training data. Here's how we could make a 30-day forecast:
+
+X = dp.out_of_sample(steps=30)
+y_fore = pd.Series(model.predict(X), index=X.index)
+y_fore.head()
+
+🔺 MOVING AVERAGE PLOT
+make a moving average plot to see what kind of trend a series has. 
+To create a moving average, first use the rolling method to begin a windowed computation.
+(daily observation: 365, monthly observation: 12, weekly observation: 7, quarterly observation: 4)
+Follow this by the mean method to compute the average over the window. 
+
+moving_average = tunnel.rolling(
+    window=365,       # 365-day window -> for daily observations
+    center=True,      # puts the average at the center of the window
+    min_periods=183,  # choose about half the window size
+).mean()              # compute the mean (could also do median, std, min, max, ...)
+
+ax = tunnel.plot(style=".", color="0.5")
+moving_average.plot(
+    ax=ax, linewidth=3, title="Tunnel Traffic - 365-Day Moving Average", legend=False,
+)
+
+
+
