@@ -53,6 +53,32 @@ X = dp.out_of_sample(steps=30)
 y_fore = pd.Series(model.predict(X), index=X.index)
 y_fore.head()
 
+"""
+from statsmodels.tsa.deterministic import DeterministicProcess
+
+y = average_sales.copy()  # the target
+
+# Instantiate `DeterministicProcess` with arguments appropriate for a cubic trend model
+dp = DeterministicProcess(
+    index = y.index,
+    order = 3 
+)
+
+X = dp.in_sample() # Create the feature set for the dates given in y.index
+X_fore = dp.out_of_sample(steps=90) # Create features for a 90-day forecast.
+
+model = LinearRegression()
+model.fit(X, y)
+
+y_pred = pd.Series(model.predict(X), index=X.index)
+y_fore = pd.Series(model.predict(X_fore), index=X_fore.index)
+
+ax = y.plot(**plot_params, alpha=0.5, title="Average Sales", ylabel="items sold")
+ax = y_pred.plot(ax=ax, linewidth=3, label="Trend", color='C0')
+ax = y_fore.plot(ax=ax, linewidth=3, label="Trend Forecast", color='C3')
+ax.legend();
+"""
+
 🟢 MOVING AVERAGE PLOT
 make a moving average plot to see what kind of trend a series has. 
 To create a moving average, first use the rolling method to begin a windowed computation.
@@ -79,6 +105,11 @@ we used a moving average plot to discover the trend in a series, similarly we ca
 Seasonal indicators are binary features that represent seasonal differences in the level of a time series.
 Seasonal indicators are what you get if you treat a seasonal period (eg, days of week, monthly) as a categorical feature and apply one-hot encoding.
 
-🟢 
+🟢 FOURIER FEATURES
+they are pairs of sine and cosine curves, one pair for each potential frequency in the season starting with the longest. 
+Fourier pairs modeling annual seasonality would have frequencies: once per year, twice per year, three times per year, and so on
+
+reduced computation time and less risk of overfitting in fourier ft as few fts added to training data compared to indicators
+periodogram tells you the strength of the frequencies in a time series
 
 
