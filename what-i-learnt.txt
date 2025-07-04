@@ -34,7 +34,7 @@ plt.show()
 - tells if there is info in past that could help in predict future
 - correlates time series features with lagged values
 
-🔺 TREND
+🟢 TREND
 from statsmodels.tsa.deterministic import DeterministicProcess
 dp = DeterministicProcess(
     index=tunnel.index,  # dates from the training data
@@ -45,7 +45,7 @@ dp = DeterministicProcess(
 # `in_sample` creates features for the dates given in the `index` argument
 X = dp.in_sample()
 
-🔺 FORECAST 
+🟢 FORECAST 
 To make a forecast, we apply our model to "out of sample" features. 
 "Out of sample" refers to times outside of the observation period of the training data. Here's how we could make a 30-day forecast:
 
@@ -53,7 +53,7 @@ X = dp.out_of_sample(steps=30)
 y_fore = pd.Series(model.predict(X), index=X.index)
 y_fore.head()
 
-🔺 MOVING AVERAGE PLOT
+🟢 MOVING AVERAGE PLOT
 make a moving average plot to see what kind of trend a series has. 
 To create a moving average, first use the rolling method to begin a windowed computation.
 (daily observation: 365, monthly observation: 12, weekly observation: 7, quarterly observation: 4)
@@ -70,5 +70,15 @@ moving_average.plot(
     ax=ax, linewidth=3, title="Tunnel Traffic - 365-Day Moving Average", legend=False,
 )
 
+🟢 SEASONALITY
+The first kind, indicators, is best for a season with few observations, like a weekly season of daily observations. 
+The second kind, Fourier features, is best for a season with many observations, like an annual season of daily observations.
+we used a moving average plot to discover the trend in a series, similarly we can use a seasonal plot to discover seasonal patterns.
+
+🟢 SEASONAL INDICATORS
+Seasonal indicators are binary features that represent seasonal differences in the level of a time series.
+Seasonal indicators are what you get if you treat a seasonal period (eg, days of week, monthly) as a categorical feature and apply one-hot encoding.
+
+🟢 
 
 
