@@ -112,4 +112,42 @@ Fourier pairs modeling annual seasonality would have frequencies: once per year,
 reduced computation time and less risk of overfitting in fourier ft as few fts added to training data compared to indicators
 periodogram tells you the strength of the frequencies in a time series
 
+🟢 SEASONAL_PLOT
+X = average_sales.to_frame()
+X["week"] = X.index.week
+X["day"] = X.index.dayofweek
+seasonal_plot(X, y='sales', period='week', freq='day'); # seasonal plot over a week
 
+🟢 CREATING SEASONAL FEATURES
+
+"""
+from statsmodels.tsa.deterministic import CalendarFourier, DeterministicProcess
+fourier = CalendarFourier(freq="A", order=10)  # 10 sin/cos pairs for "A"nnual seasonality
+
+dp = DeterministicProcess(
+    index=tunnel.index,
+    constant=True,               # dummy feature for bias (y-intercept)
+    order=1,                     # trend (order 1 means linear)
+    seasonal=True,               # weekly seasonality (indicators)
+    additional_terms=[fourier],  # annual seasonality (fourier)
+    drop=True,                   # drop terms to avoid collinearity
+)
+X = dp.in_sample()  # create features for dates in tunnel.index
+"""
+
+"""
+Use DeterministicProcess and CalendarFourier to create: indicators for weekly seasons and Fourier features of order 4 for monthly seasons.
+y = average_sales.copy()
+fourier = CalendarFourier(freq="M", order = 4)
+dp = DeterministicProcess(
+    index=y.index,
+    constant=True,
+    order=1,
+    seasonal= True,
+    additional_terms=[fourier],
+    drop=True,
+)
+X = dp.in_sample()
+"""
+
+🟢 Removing from a series its trend or seasons is called detrending or deseasonalizing the series.
